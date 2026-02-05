@@ -1,0 +1,42 @@
+npx convex dev
+
+? Welcome to Convex! Would you like to login to your account? Login or create an account
+Welcome to developing with Convex, let's get you logged in.
+? Device name: 888ff131bd41
+Visit https://auth.convex.dev/device?user_code=ZBQL-SMZV to finish logging in.
+You should see the following code which expires in 299 seconds: ZBQL-SMZV
+? Open the browser? Yes
+✔ Saved credentials to /home/runner/.convex/config.json
+? What would you like to configure? create a new project
+? Project name: test-convex-template
+✔ Created project test-convex-template, manage it at https://dashboard.convex.dev/t/daniel-rocha-lopes/test-convex-template
+Temporary directory '/tmp' and project directory 'convex' are on different filesystems.
+  If you're running into errors with other tools watching the project directory, override the temporary directory location with the CONVEX_TMPDIR environment variable.
+  Be sure to pick a temporary directory that's on the same filesystem as your project.
+✔ Provisioned a dev deployment and saved its:
+    name as CONVEX_DEPLOYMENT
+    Client URL as VITE_CONVEX_URL
+    HTTP Actions URL as VITE_CONVEX_SITE_URL
+ to .env.local
+
+Write your Convex functions in convex/
+Give us feedback at https://convex.dev/community or support@convex.dev
+View the Convex dashboard at https://dashboard.convex.dev/d/brainy-mongoose-268
+
+⠙ Finding component definitions...
+✘ [ERROR] Could not resolve "@convex-dev/auth/convex.config"
+
+    convex/convex.config.ts:2:17:
+      2 │ import auth from "@convex-dev/auth/convex.config";
+        ╵                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  The path "./convex.config" is not exported by package "@convex-dev/auth":
+
+    node_modules/@convex-dev/auth/package.json:43:13:
+      43 │   "exports": {
+         ╵              ^
+
+  You can mark the path "@convex-dev/auth/convex.config" as external to exclude it from the bundle,
+  which will remove this error and leave the unresolved path in the bundle.
+✖ esbuild failed: Error: Build failed with 1 error:
+convex/convex.config.ts:2:17: ERROR: Could not resolve "@convex-dev/auth/convex.config"
