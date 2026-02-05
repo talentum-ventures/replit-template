@@ -37,3 +37,9 @@ author = "agent"
 task = "shell.exec"
 args = "npm run dev"
 waitForPort = 5000
+
+[userenv]
+
+[userenv.shared]
+VITE_CONVEX_URL = "https://brainy-mongoose-268.convex.cloud"
+VITE_CONVEX_SITE_URL = "https://brainy-mongoose-268.convex.site"

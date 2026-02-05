@@ -1,0 +1,26 @@
+2/5/2026, 8:14:23 PM [CONVEX M(auth:store)] Uncaught Error: Missing environment variable `JWT_PRIVATE_KEY`
+    at requireEnv (../../node_modules/@convex-dev/auth/src/server/utils.ts:5:9)
+    at generateToken (../../node_modules/@convex-dev/auth/src/server/implementation/tokens.ts:19:19)
+    at generateTokensForSession (../../node_modules/@convex-dev/auth/src/server/implementation/sessions.ts:77:18)
+    at async maybeGenerateTokensForSession (../../node_modules/@convex-dev/auth/src/server/implementation/sessions.ts:32:10)
+    at async signInImpl (../../node_modules/@convex-dev/auth/src/server/implementation/mutations/signIn.ts:34:0)
+
+2/5/2026, 8:14:23 PM [CONVEX A(auth:signIn)] Uncaught Error: Uncaught Error: Missing environment variable `JWT_PRIVATE_KEY`
+    at requireEnv (../../node_modules/@convex-dev/auth/src/server/utils.ts:5:9)
+    at generateToken (../../node_modules/@convex-dev/auth/src/server/implementation/tokens.ts:19:19)
+    at generateTokensForSession (../../node_modules/@convex-dev/auth/src/server/implementation/sessions.ts:77:18)
+    at async maybeGenerateTokensForSession (../../node_modules/@convex-dev/auth/src/server/implementation/sessions.ts:32:10)
+    at async signInImpl (../../node_modules/@convex-dev/auth/src/server/implementation/mutations/signIn.ts:34:0)
+
+    at async handleCredentials (../../node_modules/@convex-dev/auth/src/server/implementation/signIn.ts:195:12)
+    at async handler (../../node_modules/@convex-dev/auth/src/server/implementation/index.ts:416:26)
+
+2/5/2026, 8:15:35 PM [CONVEX M(auth:store)] [INFO] '`auth:store` type: createAccountFromCredentials'
+2/5/2026, 8:15:35 PM [CONVEX M(auth:store)] [INFO] '`auth:store` type: signIn'
+2/5/2026, 8:15:35 PM [CONVEX H(GET /.well-known/jwks.json)] Uncaught Error: Missing environment variable `JWKS`
+    at requireEnv (../../node_modules/@convex-dev/auth/src/server/utils.ts:5:9)
+    at <anonymous> (../../node_modules/@convex-dev/auth/src/server/implementation/index.ts:224:20)
+    at invokeFunction (../../node_modules/convex/src/server/impl/registration_impl.ts:80:28)
+    at invokeHttpAction (../../node_modules/convex/src/server/impl/registration_impl.ts:455:0)
+    at t.invokeHttpAction [as invokeHttpAction] (../../node_modules/convex/src/server/impl/registration_impl.ts:466:33)
+    at <anonymous> (../../node_modules/convex/src/server/router.ts:328:16)
