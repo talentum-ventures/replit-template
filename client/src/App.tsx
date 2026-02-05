@@ -1,30 +1,26 @@
 import { Switch, Route } from "wouter";
-import { queryClient } from "./lib/queryClient";
-import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { ThemeProvider } from "@/components/theme-provider";
+import { SetupGuide } from "@/components/setup-guide";
+import { DashboardDemo } from "@/components/dashboard-demo";
+import { LandingPage } from "@/components/landing-page";
 import NotFound from "@/pages/not-found";
 
-function Router() {
+function DemoApp() {
   return (
-    <Switch>
-      {/* Add pages below */}
-      {/* <Route path="/" component={Home}/> */}
-      {/* Fallback to 404 */}
-      <Route component={NotFound} />
-    </Switch>
-  );
-}
-
-function App() {
-  return (
-    <QueryClientProvider client={queryClient}>
+    <ThemeProvider defaultTheme="system" storageKey="app-theme">
       <TooltipProvider>
         <Toaster />
-        <Router />
+        <Switch>
+          <Route path="/" component={SetupGuide} />
+          <Route path="/demo" component={DashboardDemo} />
+          <Route path="/landing" component={LandingPage} />
+          <Route component={NotFound} />
+        </Switch>
       </TooltipProvider>
-    </QueryClientProvider>
+    </ThemeProvider>
   );
 }
 
-export default App;
+export default DemoApp;
