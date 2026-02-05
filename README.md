@@ -21,11 +21,20 @@ A production-ready, mobile-first web application template built with modern tech
 - Dark/light theme support
 - Type-safe throughout (TypeScript strict mode)
 - Real-time data synchronization with Convex
-- Secure authentication with email/password
+- Google OAuth authentication
+- Demo mode when Convex is not configured
 - Pre-configured linting and formatting
 - Git hooks with Husky and lint-staged
 - VS Code settings and recommended extensions
 - Example todo app with full CRUD operations
+
+## Quick Start (Remix Setup)
+
+See **[SETUP.md](./SETUP.md)** for complete setup instructions including:
+- Convex configuration
+- Google OAuth setup
+- Environment variables
+- Deployment guide
 
 ## Getting Started
 
