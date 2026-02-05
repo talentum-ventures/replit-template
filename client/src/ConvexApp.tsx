@@ -34,21 +34,7 @@ export function ConvexApp() {
                 </Authenticated>
                 <Unauthenticated>
                   <div className="min-h-screen flex items-center justify-center p-4 bg-background">
-                    <AuthForm mode="signin" />
-                  </div>
-                </Unauthenticated>
-              </>
-            )}
-          </Route>
-          <Route path="/signup">
-            {() => (
-              <>
-                <Authenticated>
-                  <Dashboard />
-                </Authenticated>
-                <Unauthenticated>
-                  <div className="min-h-screen flex items-center justify-center p-4 bg-background">
-                    <AuthForm mode="signup" />
+                    <AuthForm />
                   </div>
                 </Unauthenticated>
               </>

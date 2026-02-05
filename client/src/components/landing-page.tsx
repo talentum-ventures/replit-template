@@ -56,13 +56,8 @@ export function LandingPage() {
           <div className="flex items-center gap-2">
             <ThemeToggle />
             <Link href="/login">
-              <Button variant="ghost" size="sm" data-testid="button-signin-header">
-                Sign in
-              </Button>
-            </Link>
-            <Link href="/signup">
-              <Button size="sm" data-testid="button-signup-header">
-                Get started
+              <Button size="sm" data-testid="button-signin-header">
+                Sign in with Google
               </Button>
             </Link>
           </div>
@@ -84,22 +79,12 @@ export function LandingPage() {
                 </p>
               </div>
               <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-                <Link href="/signup" className="w-full sm:w-auto">
+                <Link href="/login" className="w-full sm:w-auto">
                   <Button size="lg" className="w-full" data-testid="button-get-started">
-                    Get started
+                    Sign in with Google
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </Link>
-                <a
-                  href="https://github.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full sm:w-auto"
-                >
-                  <Button variant="outline" size="lg" className="w-full" data-testid="button-view-github">
-                    View on GitHub
-                  </Button>
-                </a>
               </div>
             </div>
           </div>
