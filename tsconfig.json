@@ -20,24 +20,11 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "useDefineForClassFields": true,
-    "baseUrl": ".",
     "types": ["node", "vite/client"],
     "paths": {
-      "@/*": ["./client/src/*"],
-      "@shared/*": ["./shared/*"]
+      "@/*": ["./client/src/*"]
     }
   },
-  "include": [
-    "client/src/**/*",
-    "shared/**/*",
-    "server/**/*",
-    "convex/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    ".convex",
-    "convex/_generated",
-    "app"
-  ]
+  "include": ["client/src/**/*", "convex/**/*"],
+  "exclude": ["node_modules", "dist", ".convex", "convex/_generated", "app"]
 }

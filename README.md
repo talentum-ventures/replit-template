@@ -12,14 +12,14 @@ A production-ready, mobile-first web application template built with modern tech
 - **Styling**: [Tailwind CSS](https://tailwindcss.com) - Utility-first CSS framework
 - **Routing**: [wouter](https://github.com/molefrog/wouter) - Minimalist React router
 - **Linting**: [oxlint](https://oxc.rs) - Ultra-fast Rust-based linter
-- **Formatting**: [Prettier](https://prettier.io) - Code formatter
-- **Language**: [TypeScript](https://www.typescriptlang.org) - Type-safe JavaScript
+- **Formatting**: [oxfmt](https://oxc.rs/docs/guide/usage/formatter.html) - Rust-based formatter
+- **Type Checking**: [tsgo](https://github.com/microsoft/typescript-go) - Native TypeScript compiler preview
 
 ## Features
 
 - Mobile-first responsive design
 - Dark/light theme support
-- Type-safe throughout (TypeScript strict mode)
+- Type-safe throughout with strict TypeScript checks via `tsgo`
 - Real-time data synchronization with Convex
 - Google OAuth authentication
 - Demo mode when Convex is not configured
@@ -31,6 +31,7 @@ A production-ready, mobile-first web application template built with modern tech
 ## Quick Start (Remix Setup)
 
 See **[SETUP.md](./SETUP.md)** for complete setup instructions including:
+
 - Convex configuration
 - Google OAuth setup
 - Environment variables
@@ -47,23 +48,28 @@ See **[SETUP.md](./SETUP.md)** for complete setup instructions including:
 ### Setup
 
 1. **Install dependencies**:
+
    ```bash
    npm install
    ```
 
 2. **Set up Convex**:
+
    ```bash
    npx convex dev
    ```
+
    This will prompt you to create a new project or link to an existing one.
 
 3. **Configure environment variables**:
    Copy `.env.example` to `.env` and fill in your values:
+
    ```bash
    cp .env.example .env
    ```
-   
+
    Add your Convex URL:
+
    ```
    VITE_CONVEX_URL=https://your-project.convex.cloud
    ```
@@ -101,24 +107,27 @@ See **[SETUP.md](./SETUP.md)** for complete setup instructions including:
 ├── shared/               # Shared types
 │   └── schema.ts         # TypeScript schemas
 ├── .oxlintrc.json        # oxlint configuration
-├── .prettierrc           # Prettier configuration
+├── .oxfmtrc.json         # oxfmt configuration
 ├── .vscode/              # VS Code settings
 ├── tailwind.config.ts    # Tailwind CSS configuration
-└── tsconfig.json         # TypeScript configuration
+└── tsconfig.json         # tsgo / TypeScript configuration
 ```
 
 ## Available Scripts
 
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start development server |
-| `npm run build` | Build for production |
-| `npm run start` | Start production server |
-| `npm run check` | TypeScript type checking |
-| `npx oxlint client convex --fix` | Run oxlint and fix issues |
-| `npx prettier --write .` | Format code with Prettier |
-| `npx convex dev` | Start Convex development |
-| `npx convex deploy` | Deploy Convex to production |
+| Command                | Description                   |
+| ---------------------- | ----------------------------- |
+| `npm run dev`          | Start development server      |
+| `npm run build`        | Build for production          |
+| `npm run start`        | Start production server       |
+| `npm run lint`         | Run oxlint across the project |
+| `npm run lint:fix`     | Run oxlint with auto-fixes    |
+| `npm run format`       | Format the repo with oxfmt    |
+| `npm run format:check` | Check formatting with oxfmt   |
+| `npm run typecheck`    | Run tsgo type checking        |
+| `npm run check`        | Alias for `npm run typecheck` |
+| `npx convex dev`       | Start Convex development      |
+| `npx convex deploy`    | Deploy Convex to production   |
 
 ## Development Guidelines
 
@@ -133,6 +142,7 @@ See **[SETUP.md](./SETUP.md)** for complete setup instructions including:
 ### Responsive Design
 
 The template uses a mobile-first approach:
+
 - Base styles target mobile devices
 - Use Tailwind's responsive prefixes (`sm:`, `md:`, `lg:`, `xl:`) for larger screens
 - Test on various device sizes
@@ -142,8 +152,8 @@ The template uses a mobile-first approach:
 Routes use wouter. Add new routes in `client/src/App.tsx`:
 
 ```tsx
-import { Switch, Route } from "wouter";
-import { NewPage } from "@/pages/new-page";
+import { Switch, Route } from 'wouter';
+import { NewPage } from '@/pages/new-page';
 
 function Router() {
   return (
@@ -163,12 +173,13 @@ function Router() {
 3. Import and use with `useQuery`/`useMutation` from `convex/react`
 
 Example query:
+
 ```tsx
-import { useQuery } from "convex/react";
-import { api } from "../convex/_generated/api";
+import { useQuery } from 'convex/react';
+import { api } from '../convex/_generated/api';
 
 function MyComponent() {
-  const data = useQuery(api.myModule.myQuery, { arg: "value" });
+  const data = useQuery(api.myModule.myQuery, { arg: 'value' });
   return <div>{data}</div>;
 }
 ```
@@ -178,18 +189,14 @@ function MyComponent() {
 The template uses Convex Auth for authentication:
 
 ```tsx
-import { Authenticated, Unauthenticated } from "convex/react";
-import { useAuthActions } from "@convex-dev/auth/react";
+import { Authenticated, Unauthenticated } from 'convex/react';
+import { useAuthActions } from '@convex-dev/auth/react';
 
 function App() {
   return (
     <>
-      <Authenticated>
-        {/* Show when logged in */}
-      </Authenticated>
-      <Unauthenticated>
-        {/* Show when logged out */}
-      </Unauthenticated>
+      <Authenticated>{/* Show when logged in */}</Authenticated>
+      <Unauthenticated>{/* Show when logged out */}</Unauthenticated>
     </>
   );
 }
@@ -205,6 +212,7 @@ function SignOutButton() {
 ### Convex
 
 Deploy your Convex backend:
+
 ```bash
 npx convex deploy
 ```
@@ -212,12 +220,14 @@ npx convex deploy
 ### Frontend + Express
 
 The app can be deployed to any Node.js hosting platform:
+
 - Replit (recommended)
 - Railway
 - Render
 - Fly.io
 
 Build and run:
+
 ```bash
 npm run build
 npm run start
@@ -228,6 +238,7 @@ npm run start
 ### oxlint
 
 Ultra-fast linting with oxlint:
+
 ```bash
 # Check for issues
 npx oxlint client convex
@@ -236,22 +247,32 @@ npx oxlint client convex
 npx oxlint client convex --fix
 ```
 
-### Prettier
+### oxfmt
 
 Format code:
+
 ```bash
 # Format all files
-npx prettier --write .
+npx oxfmt -c .oxfmtrc.json --write .
 
 # Check formatting
-npx prettier --check .
+npx oxfmt -c .oxfmtrc.json --check .
+```
+
+### tsgo
+
+Run native TypeScript checks:
+
+```bash
+npx tsgo -p tsconfig.json --noEmit
 ```
 
 ### Pre-commit Hooks
 
 The template includes Husky and lint-staged for automatic linting on commit:
+
 - Runs oxlint with auto-fix on staged `.ts/.tsx` files
-- Runs Prettier on staged files
+- Runs oxfmt on staged source and JSON files
 
 ## License
 

@@ -1,34 +1,35 @@
-import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
-import "./index.css";
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import { ConvexAuthProvider } from '@convex-dev/auth/react';
+import { ConvexReactClient } from 'convex/react';
+import '@talentum-ventures/convex-datatable/styles.css';
+import './index.css';
+import { ConvexApp } from './ConvexApp';
+import { DemoApp } from './DemoApp';
 
-const convexUrl = import.meta.env.VITE_CONVEX_URL;
+const convexUrl = import.meta.env.VITE_CONVEX_URL?.trim();
+const rootElement = document.getElementById('root');
 
-async function main() {
-  const root = createRoot(document.getElementById("root")!);
-  
-  if (!convexUrl) {
-    const { default: DemoApp } = await import("./App");
-    root.render(
-      <StrictMode>
-        <DemoApp />
-      </StrictMode>
-    );
-  } else {
-    const { ConvexAuthProvider } = await import("@convex-dev/auth/react");
-    const { ConvexReactClient } = await import("convex/react");
-    const { ConvexApp } = await import("./ConvexApp");
-    
-    const convex = new ConvexReactClient(convexUrl);
-    
-    root.render(
-      <StrictMode>
-        <ConvexAuthProvider client={convex}>
-          <ConvexApp />
-        </ConvexAuthProvider>
-      </StrictMode>
-    );
-  }
+if (!rootElement) {
+  throw new Error('Root element not found.');
 }
 
-main();
+const root = createRoot(rootElement);
+
+if (convexUrl) {
+  const convex = new ConvexReactClient(convexUrl);
+
+  root.render(
+    <StrictMode>
+      <ConvexAuthProvider client={convex}>
+        <ConvexApp />
+      </ConvexAuthProvider>
+    </StrictMode>
+  );
+} else {
+  root.render(
+    <StrictMode>
+      <DemoApp />
+    </StrictMode>
+  );
+}

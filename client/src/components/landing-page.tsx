@@ -1,46 +1,32 @@
-import { Link } from "wouter";
-import { Button } from "@/components/ui/button";
-import { ThemeToggle } from "@/components/theme-toggle";
-import {
-  Zap,
-  Shield,
-  Smartphone,
-  Code2,
-  ArrowRight,
-  CheckCircle2,
-} from "lucide-react";
+import { Link } from 'wouter';
+import { Button } from '@/components/ui/button';
+import { ThemeToggle } from '@/components/theme-toggle';
+import { Zap, Shield, Smartphone, Code2, ArrowRight, CheckCircle2 } from 'lucide-react';
 
 const features = [
   {
     icon: Zap,
-    title: "Lightning Fast",
-    description: "Built with Vite for blazing fast development and optimal performance.",
+    title: 'Lightning Fast',
+    description: 'Built with Vite for blazing fast development and optimal performance.',
   },
   {
     icon: Shield,
-    title: "Secure Auth",
-    description: "Convex Auth provides secure, scalable authentication out of the box.",
+    title: 'Secure Auth',
+    description: 'Convex Auth provides secure, scalable authentication out of the box.',
   },
   {
     icon: Smartphone,
-    title: "Mobile First",
-    description: "Responsive design that looks great on any device, from phones to desktops.",
+    title: 'Mobile First',
+    description: 'Responsive design that looks great on any device, from phones to desktops.',
   },
   {
     icon: Code2,
-    title: "Developer Experience",
-    description: "TypeScript, oxlint, and modern tooling for a delightful development experience.",
+    title: 'Developer Experience',
+    description: 'TypeScript, oxlint, and modern tooling for a delightful development experience.',
   },
 ];
 
-const techStack = [
-  "Vite",
-  "Convex",
-  "shadcn/ui",
-  "Tailwind CSS",
-  "TypeScript",
-  "oxlint",
-];
+const techStack = ['Vite', 'Convex', 'shadcn/ui', 'Tailwind CSS', 'TypeScript', 'oxlint'];
 
 export function LandingPage() {
   return (
@@ -74,8 +60,8 @@ export function LandingPage() {
                   <span className="text-primary block sm:inline"> App Template</span>
                 </h1>
                 <p className="mx-auto max-w-[700px] text-muted-foreground text-base sm:text-lg md:text-xl">
-                  Start building your next application with Vite, Convex, and shadcn/ui.
-                  Everything you need, nothing you don't.
+                  Start building your next application with Vite, Convex, and shadcn/ui. Everything
+                  you need, nothing you don't.
                 </p>
               </div>
               <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
@@ -97,7 +83,8 @@ export function LandingPage() {
                 Everything you need to build
               </h2>
               <p className="mt-2 text-muted-foreground max-w-[600px] mx-auto">
-                A carefully crafted template with the best tools and practices for modern web development.
+                A carefully crafted template with the best tools and practices for modern web
+                development.
               </p>
             </div>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -153,9 +140,7 @@ export function LandingPage() {
                 App Template. Built with Vite + Convex.
               </span>
             </div>
-            <p className="text-sm text-muted-foreground">
-              Open source and free to use.
-            </p>
+            <p className="text-sm text-muted-foreground">Open source and free to use.</p>
           </div>
         </div>
       </footer>

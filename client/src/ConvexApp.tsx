@@ -1,12 +1,12 @@
-import { Switch, Route } from "wouter";
-import { Authenticated, Unauthenticated } from "convex/react";
-import { Toaster } from "@/components/ui/toaster";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { ThemeProvider } from "@/components/theme-provider";
-import { LandingPage } from "@/components/landing-page";
-import { Dashboard } from "@/components/dashboard";
-import { AuthForm } from "@/components/auth-form";
-import NotFound from "@/pages/not-found";
+import { Switch, Route } from 'wouter';
+import { Authenticated, Unauthenticated } from 'convex/react';
+import { Toaster } from '@/components/ui/toaster';
+import { TooltipProvider } from '@/components/ui/tooltip';
+import { ThemeProvider } from '@/components/theme-provider';
+import { LandingPage } from '@/components/landing-page';
+import { Dashboard } from '@/components/dashboard';
+import { AuthForm } from '@/components/auth-form';
+import NotFound from '@/pages/not-found';
 
 export function ConvexApp() {
   return (
@@ -29,14 +29,14 @@ export function ConvexApp() {
           <Route path="/login">
             {() => (
               <>
-                <Authenticated>
-                  <Dashboard />
-                </Authenticated>
                 <Unauthenticated>
                   <div className="min-h-screen flex items-center justify-center p-4 bg-background">
                     <AuthForm />
                   </div>
                 </Unauthenticated>
+                <Authenticated>
+                  <Dashboard />
+                </Authenticated>
               </>
             )}
           </Route>
