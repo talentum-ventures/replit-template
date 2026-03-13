@@ -1,134 +1,147 @@
 # Setup Guide
 
-This template includes Convex database with Google OAuth authentication, shadcn/ui components, and mobile-first responsive design.
+This template is designed to be easy to start on Replit, even if you have never used Convex before.
 
-## Demo Mode vs Production Mode
+## Quick Start On Replit
 
-When you first remix this template, it runs in **Demo Mode** with sample data and no authentication. To enable full functionality with Convex and Google OAuth, follow the steps below.
+1. Remix or fork the template.
+2. Click `Run`.
+3. Follow the prompts from Convex the first time you are asked.
+4. Wait for setup to finish.
+5. If the app still shows demo mode, click `Run` again or refresh the preview.
 
-## Setting Up Convex
+That is the main setup. You do not need to manually create `.env.local`.
 
-### 1. Create a Convex Account
+## What Happens Automatically
 
-1. Go to [Convex](https://convex.dev) and sign up for a free account
-2. Create a new project
+The first-run setup script does this for you:
 
-### 2. Deploy Convex Functions
+- installs dependencies if needed
+- creates or connects a **development** Convex deployment
+- generates Convex Auth keys
+- sets `SITE_URL` for the Replit workspace
+- saves a `.setup-done` file so setup does not repeat every time
 
-Run the following command in the shell:
+After that, the project starts normally with:
 
-```bash
-npx convex dev
+- the frontend on Vite
+- the backend on Convex
+
+## AI Handoff For New Projects
+
+If you use an AI assistant to customize this template into a real product, give it two jobs first:
+
+1. Verify setup is complete
+2. Gather the business context for the new app
+
+The AI should verify:
+
+- `.setup-done` exists
+- `.env.local` contains `CONVEX_DEPLOYMENT` and `VITE_CONVEX_URL`
+- the app is running in full mode instead of demo mode
+
+Then the AI should ask for:
+
+- the name of the project
+- who the app is for
+- what problem it solves
+- the most important features for version one
+- auth requirements
+- design or brand preferences
+- outside services or APIs that need to connect to the app
+
+This helps the AI adapt the template to the actual business instead of making generic changes.
+
+## Development Vs Production
+
+This template uses **different Convex deployments for development and production**.
+
+### Development
+
+Development is created automatically during the first Replit setup.
+
+The generated values go into `.env.local`, usually including:
+
+- `CONVEX_DEPLOYMENT`
+- `VITE_CONVEX_URL`
+- `VITE_CONVEX_SITE_URL`
+
+### Production
+
+Production should use a separate Convex deployment.
+
+Before you deploy on Replit, add these values to Replit:
+
+- `CONVEX_DEPLOY_KEY`
+- `VITE_CONVEX_URL`
+
+`CONVEX_DEPLOY_KEY` tells `npx convex deploy` which production deployment to update.
+
+`VITE_CONVEX_URL` tells the built frontend which Convex deployment to talk to in production.
+
+## Recommended Production Setup
+
+1. Create or choose your production deployment in Convex.
+2. Copy the production deploy key from the Convex dashboard.
+3. Add `CONVEX_DEPLOY_KEY` in Replit.
+4. Add the production `VITE_CONVEX_URL` in Replit.
+5. Deploy the app from Replit.
+
+If you use Google OAuth, also update the production callback settings before deploying.
+
+## Optional Google OAuth Setup
+
+Google OAuth is optional. The template can still work in development with password auth when appropriate.
+
+If you want Google sign-in:
+
+1. Create OAuth credentials in [Google Cloud Console](https://console.cloud.google.com/).
+2. Add this redirect URI in Google:
+
+```text
+https://YOUR_CONVEX_DEPLOYMENT.convex.site/api/auth/callback/google
 ```
 
-This will:
+3. Set these values in your Convex deployment:
 
-- Prompt you to log in to Convex
-- Create a new Convex deployment
-- Generate `.env.local` with your `CONVEX_DEPLOYMENT` and `VITE_CONVEX_URL`
+- `AUTH_GOOGLE_ID`
+- `AUTH_GOOGLE_SECRET`
 
-### 3. Generate Authentication Keys
+4. Make sure `SITE_URL` in Convex matches your app URL.
 
-Run this command to generate JWT keys for authentication:
+For a Replit workspace URL, that will usually look like:
 
-```bash
-npx @convex-dev/auth
+```text
+https://YOUR-APP-NAME.YOUR-USER.replit.dev
 ```
 
-This will set up `JWT_PRIVATE_KEY` and `JWKS` environment variables in your Convex deployment.
+The first-run script automatically sets `SITE_URL` for the workspace when `REPLIT_DEV_DOMAIN` is available.
 
-## Setting Up Google OAuth
+## Re-Running Setup
 
-### 1. Create Google OAuth Credentials
+If you want to run setup again:
 
-1. Go to [Google Cloud Console](https://console.cloud.google.com/)
-2. Create a new project or select an existing one
-3. Navigate to **APIs & Services** → **Credentials**
-4. Click **Create Credentials** → **OAuth 2.0 Client IDs**
-5. Configure the OAuth consent screen if prompted
-6. For Application type, select **Web application**
-7. Add authorized redirect URI:
-   ```
-   https://YOUR_CONVEX_DEPLOYMENT.convex.site/api/auth/callback/google
-   ```
-   Replace `YOUR_CONVEX_DEPLOYMENT` with your Convex deployment name (e.g., `brainy-mongoose-268`)
+1. Delete `.setup-done`
+2. Run the `Setup` workflow in Replit
 
-### 2. Set Google OAuth Environment Variables
-
-Run these commands with your Google OAuth credentials:
-
-```bash
-npx convex env set AUTH_GOOGLE_ID "your-google-client-id"
-npx convex env set AUTH_GOOGLE_SECRET "your-google-client-secret"
-```
-
-### 3. Set Site URL
-
-Set your app's URL (the Replit URL where your app is hosted):
-
-```bash
-npx convex env set SITE_URL "https://your-replit-app-url.replit.dev"
-```
-
-You can find your Replit app URL in the webview panel or by running:
-
-```bash
-echo "https://$REPLIT_DEV_DOMAIN"
-```
-
-## Verifying Setup
-
-After completing all steps:
-
-1. Restart the application workflow
-2. Visit your app - you should see the login page instead of demo mode
-3. Click "Sign in with Google" to test authentication
-
-## Environment Variables Summary
-
-### Convex Dashboard (set via `npx convex env set`)
-
-| Variable             | Description                          |
-| -------------------- | ------------------------------------ |
-| `AUTH_GOOGLE_ID`     | Google OAuth Client ID               |
-| `AUTH_GOOGLE_SECRET` | Google OAuth Client Secret           |
-| `SITE_URL`           | Your app's public URL                |
-| `JWT_PRIVATE_KEY`    | Auto-generated by `@convex-dev/auth` |
-| `JWKS`               | Auto-generated by `@convex-dev/auth` |
-
-### Local Environment (`.env.local`)
-
-| Variable            | Description                                     |
-| ------------------- | ----------------------------------------------- |
-| `CONVEX_DEPLOYMENT` | Your Convex deployment name                     |
-| `VITE_CONVEX_URL`   | Convex deployment URL (enables production mode) |
-
-## Deploying to Production
-
-When publishing your app on Replit:
-
-1. Ensure all Convex environment variables are set
-2. Update `SITE_URL` to your production domain (your `.replit.app` URL or custom domain)
-3. Update the Google OAuth redirect URI in Google Cloud Console to match your production domain
-4. Click "Publish" in Replit
+You may also want to remove or regenerate `.env.local` if you are intentionally switching development deployments.
 
 ## Troubleshooting
 
-### "No matching routes found" after Google sign-in
+### The app still shows demo mode
 
-- Verify the redirect URI in Google Cloud Console matches exactly:
-  `https://YOUR_CONVEX_DEPLOYMENT.convex.site/api/auth/callback/google`
+- wait for the first-time Convex setup to finish
+- run the project again
+- check that `.env.local` contains `VITE_CONVEX_URL`
 
-### "Missing environment variable SITE_URL"
+### I want a fresh development Convex instance
 
-- Run: `npx convex env set SITE_URL "https://your-app-url"`
+- delete `.setup-done`
+- delete `.env.local`
+- run the `Setup` workflow again
 
-### App shows demo mode instead of login
+### Google sign-in is failing
 
-- Ensure `VITE_CONVEX_URL` is set in `.env.local`
-- Restart the application workflow
-
-### Google OAuth error
-
-- Verify `AUTH_GOOGLE_ID` and `AUTH_GOOGLE_SECRET` are correctly set
-- Check that your Google OAuth consent screen is configured
+- verify the callback URL in Google Cloud exactly matches your Convex site URL
+- verify `AUTH_GOOGLE_ID` and `AUTH_GOOGLE_SECRET` are set in Convex
+- verify `SITE_URL` matches the URL where users open your app

@@ -1,90 +1,139 @@
 # replit.md
 
-## Recent Changes (Feb 2026)
-
-- Implemented conditional app loading: Demo mode (without Convex) and Full mode (with Convex)
-- Created separate DemoApp and ConvexApp for clean architecture separation
-- Added setup guide for first-time users
-- Configured oxlint with react-in-jsx-scope disabled for Vite JSX transform
-- All tests passing for demo mode functionality
-
 ## Overview
 
-A production-ready, mobile-first web application template combining Vite (frontend build), Express (backend API), and Convex (real-time database and authentication). The project includes a complete todo application example with user authentication, demonstrating the full stack integration. When Convex is not configured, the app displays a setup guide; when configured, it provides a full authenticated dashboard experience.
+This repository is a Replit-ready template for a Vite + React + Convex app. It is designed so a non-technical user can remix the project, click `Run`, follow the Convex login prompts once, and then keep using the project without repeating setup.
 
-## User Preferences
+The app has two modes:
 
-Preferred communication style: Simple, everyday language.
+- **Demo mode** when `VITE_CONVEX_URL` is missing
+- **Full app mode** when Convex is configured
 
-## System Architecture
+## Replit Setup Flow
 
-### Frontend Architecture
+On Replit, first-run setup is handled by `script/setup.sh`.
 
-- **Build Tool**: Vite with React plugin for fast HMR and optimized production builds
-- **UI Framework**: React with TypeScript in strict mode
-- **Component Library**: shadcn/ui components built on Radix UI primitives
-- **Styling**: Tailwind CSS with CSS variables for theming (dark/light mode support)
-- **Routing**: wouter - lightweight React router for SPA navigation
-- **State Management**: React Query for server state, React Context for theme/sidebar state
+What it does:
 
-### Backend Architecture
+1. Installs dependencies if needed
+2. Runs `npx convex dev --once` to create or connect a dev Convex deployment
+3. Runs `npx @convex-dev/auth` to generate auth keys for that deployment
+4. Sets `SITE_URL` in Convex when `REPLIT_DEV_DOMAIN` is available
+5. Writes `.setup-done` so the setup only runs once per remix
 
-- **API Server**: Express.js running on Node.js
-- **Real-time Backend**: Convex for database operations, real-time subscriptions, and authentication
-- **Dual Storage Pattern**:
-  - Convex handles authenticated user data (todos, user profiles)
-  - Drizzle ORM with PostgreSQL available for traditional REST API patterns
-- **Build Process**: Custom esbuild script bundles server with selected dependencies for optimized cold starts
+The script also uses a lock directory so `onBoot` and workflow runs do not try to configure Convex at the same time.
+
+## AI Setup Instructions
+
+If you are an AI agent working in a remix of this template, do this before making product-specific changes:
+
+1. Check whether `.setup-done` exists.
+2. If it does not exist, ask the user to click `Run` or run the `Setup` workflow and complete the Convex prompts.
+3. Confirm `.env.local` now contains `CONVEX_DEPLOYMENT` and `VITE_CONVEX_URL`.
+4. Confirm the app is no longer using demo mode.
+5. Before preparing production deployment, ask the user for their production Convex deployment details and ensure Replit has:
+   - `CONVEX_DEPLOY_KEY`
+   - production `VITE_CONVEX_URL`
+
+Do not assume the development Convex deployment should also be used for production. This template is designed for separate dev and prod Convex instances.
+
+## AI Business Context Instructions
+
+This repository is only a starting template. Before building features, the AI should gather the business context for the new project.
+
+Ask the user for:
+
+1. The project name and one-sentence description
+2. The target users or customers
+3. The core problem the app should solve
+4. The top 3 to 5 workflows the first version must support
+5. Whether authentication is required and which providers should be enabled
+6. Any brand, tone, or design preferences
+7. Any external systems or APIs the app must integrate with
+8. What should be included in version one versus later phases
+
+After collecting that context, the AI should summarize it in plain language and use it to guide all future product, schema, auth, and UI decisions.
+
+## Architecture
+
+### Frontend
+
+- **Build tool**: Vite
+- **UI**: React + TypeScript
+- **Routing**: wouter
+- **Styling**: Tailwind CSS + shadcn/ui components
+- **Entry point**: `client/src/main.tsx`
+
+### Backend
+
+- **Application backend**: Convex only
+- **Schema**: `convex/schema.ts`
+- **Queries and mutations**: `convex/todos.ts`, `convex/users.ts`, `convex/presence.ts`
+- **HTTP auth routes**: `convex/http.ts`
+
+There is no Express server in the current template. Production hosting is a static frontend bundle that talks directly to Convex.
 
 ### Authentication
 
-- **Provider**: Convex Auth with Password strategy (email/password)
-- **Flow**: Sign up/sign in forms using Convex's built-in auth system
-- **Session Management**: Handled by Convex automatically with React hooks (`useAuthActions`, `Authenticated`, `Unauthenticated` components)
+- **Library**: `@convex-dev/auth`
+- **Configured provider**: Google OAuth
+- **Dev-friendly provider**: Password auth is enabled automatically in local/dev/staging-like environments
+- **Client integration**: `ConvexAuthProvider` in `client/src/main.tsx`
 
-### Development Tooling
+## Replit Configuration
 
-- **Linting**: oxlint (Rust-based, fast) with React/TypeScript plugins
-- **Formatting**: oxfmt with lint-staged for pre-commit hooks
-- **Type Checking**: tsgo (`@typescript/native-preview`) with strict null checks and no unused variables/parameters
+### Workspace startup
 
-### Key Design Decisions
+- `onBoot = "bash script/setup.sh"` triggers the one-time setup automatically
+- The `Project` workflow starts:
+  - `Start Convex Backend`
+  - `Start Frontend`
+- The `Setup` workflow lets a user rerun setup manually
 
-1. **Conditional App Loading**: Main entry point (`main.tsx`) dynamically imports either a demo app or the full Convex-powered app based on `VITE_CONVEX_URL` environment variable presence
+### Dev and prod separation
 
-2. **Path Aliases**: Configured in both Vite and TypeScript for clean imports:
-   - `@/*` → `client/src/*`
-   - `@shared/*` → `shared/*`
+- **Development** uses the deployment created by `npx convex dev --once`
+- **Production** uses a separate Convex deployment selected through `CONVEX_DEPLOY_KEY` during Replit deploys
+- The built frontend should point at production via `VITE_CONVEX_URL`
 
-3. **Server-Side Static Serving**: Production Express server serves Vite-built static files with SPA fallback to `index.html`
+### Deployment
 
-4. **Component Architecture**: UI components follow shadcn/ui patterns - copied into project for full customization rather than installed as dependencies
+Replit deployment is configured as a static site:
 
-## External Dependencies
+- Build step: `npx convex deploy && npm run build`
+- Static output: `dist/public`
 
-### Real-time Database & Auth
+## Environment Model
 
-- **Convex**: Primary backend-as-a-service for real-time data sync and authentication
-  - Schema defined in `convex/schema.ts` with tables: users, todos, plus auth tables
-  - Queries and mutations in `convex/todos.ts`, `convex/users.ts`
-  - Configuration requires `VITE_CONVEX_URL` environment variable
+### Local workspace values
 
-### Database (Optional REST Pattern)
+`npx convex dev --once` creates `.env.local` with values like:
 
-- **PostgreSQL**: Available via Drizzle ORM for traditional database operations
-  - Schema in `shared/schema.ts`
-  - Requires `DATABASE_URL` environment variable
-  - Migrations managed via `drizzle-kit push`
+- `CONVEX_DEPLOYMENT`
+- `VITE_CONVEX_URL`
+- `VITE_CONVEX_SITE_URL`
 
-### UI Component Primitives
+### Convex environment values
 
-- **Radix UI**: Headless component primitives for accessibility (dialog, dropdown, tabs, etc.)
-- **cmdk**: Command palette component
-- **react-day-picker**: Calendar/date picker
-- **embla-carousel-react**: Carousel component
-- **recharts**: Charting library
-- **vaul**: Drawer component
+Convex stores backend-only values such as:
 
-### Server Dependencies (Bundled for Production)
+- `SITE_URL`
+- `AUTH_GOOGLE_ID`
+- `AUTH_GOOGLE_SECRET`
+- generated auth keys from `@convex-dev/auth`
 
-Key dependencies bundled via esbuild for optimized cold starts: express, cors, drizzle-orm, pg, express-session, zod, date-fns
+### Replit deployment values
+
+Replit should provide production build values such as:
+
+- `CONVEX_DEPLOY_KEY`
+- `VITE_CONVEX_URL`
+
+## Important Files
+
+- `script/setup.sh`: one-time Replit setup flow
+- `.replit`: startup workflows and deployment config
+- `SETUP.md`: user-facing setup guide
+- `client/src/main.tsx`: demo mode vs full app switch
+- `client/src/ConvexApp.tsx`: app entry when Convex is configured
+- `client/src/DemoApp.tsx`: fallback UI before setup is complete

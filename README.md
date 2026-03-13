@@ -1,278 +1,117 @@
-# Vite + Convex App Template
+# Convex App Replit Template
 
-A production-ready, mobile-first web application template built with modern technologies and best practices.
+A Replit-first starter for building a React app with Convex, authentication, and a clean mobile-friendly UI.
 
-## Tech Stack
+## What You Get
 
-- **Frontend Build**: [Vite](https://vitejs.dev) - Next generation frontend tooling
-- **Backend API**: [Express](https://expressjs.com) - Fast, minimalist web framework
-- **Database & Real-time**: [Convex](https://convex.dev) - Real-time backend as a service
-- **Authentication**: [Convex Auth](https://labs.convex.dev/auth) - Built-in authentication
-- **UI Components**: [shadcn/ui](https://ui.shadcn.com) - Beautiful, accessible components
-- **Styling**: [Tailwind CSS](https://tailwindcss.com) - Utility-first CSS framework
-- **Routing**: [wouter](https://github.com/molefrog/wouter) - Minimalist React router
-- **Linting**: [oxlint](https://oxc.rs) - Ultra-fast Rust-based linter
-- **Formatting**: [oxfmt](https://oxc.rs/docs/guide/usage/formatter.html) - Rust-based formatter
-- **Type Checking**: [tsgo](https://github.com/microsoft/typescript-go) - Native TypeScript compiler preview
+- Vite + React + TypeScript frontend
+- Convex backend with real-time queries and mutations
+- Convex Auth integration
+- Demo mode before Convex is configured
+- One-time Replit setup flow for non-technical users
+- Tailwind CSS + shadcn/ui
+- Linting, formatting, and typechecking already wired up
 
-## Features
+## Quick Start On Replit
 
-- Mobile-first responsive design
-- Dark/light theme support
-- Type-safe throughout with strict TypeScript checks via `tsgo`
-- Real-time data synchronization with Convex
-- Google OAuth authentication
-- Demo mode when Convex is not configured
-- Pre-configured linting and formatting
-- Git hooks with Husky and lint-staged
-- VS Code settings and recommended extensions
-- Example todo app with full CRUD operations
+1. Remix or fork the template.
+2. Click `Run`.
+3. Follow the Convex prompts the first time setup runs.
+4. Wait for setup to finish, then reload or run the project again if the app is still showing demo mode.
 
-## Quick Start (Remix Setup)
+The first run creates a **development** Convex deployment just for that remix and saves the generated values in `.env.local`.
 
-See **[SETUP.md](./SETUP.md)** for complete setup instructions including:
+For a more detailed walkthrough, see [SETUP.md](./SETUP.md).
 
-- Convex configuration
-- Google OAuth setup
-- Environment variables
-- Deployment guide
+## Local Development
 
-## Getting Started
+If you are running the project outside Replit:
 
-### Prerequisites
+```bash
+npm install
+npx convex dev --once
+npx @convex-dev/auth --skip-git-check --allow-dirty-git-state
+npm run dev
+```
 
-- Node.js 18+
-- npm or yarn or pnpm
-- A Convex account (free at [convex.dev](https://convex.dev))
+After the one-time setup, keep Convex and Vite running during development:
 
-### Setup
+```bash
+npx convex dev
+npm run dev
+```
 
-1. **Install dependencies**:
+## How The Template Works
 
-   ```bash
-   npm install
-   ```
-
-2. **Set up Convex**:
-
-   ```bash
-   npx convex dev
-   ```
-
-   This will prompt you to create a new project or link to an existing one.
-
-3. **Configure environment variables**:
-   Copy `.env.example` to `.env` and fill in your values:
-
-   ```bash
-   cp .env.example .env
-   ```
-
-   Add your Convex URL:
-
-   ```
-   VITE_CONVEX_URL=https://your-project.convex.cloud
-   ```
-
-4. **Start development server**:
-   ```bash
-   npm run dev
-   ```
-   The app will be available at `http://localhost:5000`.
+- `client/src/main.tsx` loads `ConvexApp` when `VITE_CONVEX_URL` exists.
+- If that variable is missing, it loads `DemoApp` so the project still opens cleanly before setup is complete.
+- `script/setup.sh` handles first-run setup on Replit and writes `.setup-done` so it only runs once per remix.
+- `.replit` starts the frontend and Convex backend in parallel.
 
 ## Project Structure
 
-```
-├── client/                 # Frontend (Vite + React)
-│   ├── src/
-│   │   ├── components/    # React components
-│   │   │   └── ui/       # shadcn/ui components
-│   │   ├── hooks/        # Custom React hooks
-│   │   ├── lib/          # Utility functions
-│   │   ├── pages/        # Page components
-│   │   ├── App.tsx       # Main app component
-│   │   ├── main.tsx      # Entry point
-│   │   └── index.css     # Global styles
-│   └── index.html        # HTML template
-├── server/                # Backend (Express)
-│   ├── index.ts          # Server entry
-│   ├── routes.ts         # API routes
-│   └── storage.ts        # Storage interface
-├── convex/               # Convex backend
-│   ├── schema.ts         # Database schema
-│   ├── auth.ts           # Authentication config
-│   ├── users.ts          # User functions
-│   ├── todos.ts          # Todo CRUD functions
-│   └── http.ts           # HTTP routes
-├── shared/               # Shared types
-│   └── schema.ts         # TypeScript schemas
-├── .oxlintrc.json        # oxlint configuration
-├── .oxfmtrc.json         # oxfmt configuration
-├── .vscode/              # VS Code settings
-├── tailwind.config.ts    # Tailwind CSS configuration
-└── tsconfig.json         # tsgo / TypeScript configuration
+```text
+.
+├── client/
+│   ├── index.html
+│   └── src/
+│       ├── components/
+│       ├── pages/
+│       ├── ConvexApp.tsx
+│       ├── DemoApp.tsx
+│       ├── index.css
+│       └── main.tsx
+├── convex/
+│   ├── auth.config.ts
+│   ├── auth.ts
+│   ├── http.ts
+│   ├── presence.ts
+│   ├── schema.ts
+│   ├── todos.ts
+│   └── users.ts
+├── script/
+│   └── setup.sh
+├── .replit
+├── SETUP.md
+├── package.json
+└── vite.config.ts
 ```
 
 ## Available Scripts
 
-| Command                | Description                   |
-| ---------------------- | ----------------------------- |
-| `npm run dev`          | Start development server      |
-| `npm run build`        | Build for production          |
-| `npm run start`        | Start production server       |
-| `npm run lint`         | Run oxlint across the project |
-| `npm run lint:fix`     | Run oxlint with auto-fixes    |
-| `npm run format`       | Format the repo with oxfmt    |
-| `npm run format:check` | Check formatting with oxfmt   |
-| `npm run typecheck`    | Run tsgo type checking        |
-| `npm run check`        | Alias for `npm run typecheck` |
-| `npx convex dev`       | Start Convex development      |
-| `npx convex deploy`    | Deploy Convex to production   |
+| Command | Description |
+| --- | --- |
+| `npm run dev` | Start the Vite dev server |
+| `npm run dev:backend` | Start `convex dev` |
+| `npm run build` | Build the frontend for production |
+| `npm run preview` | Preview the production build locally |
+| `npm run lint` | Run oxlint |
+| `npm run lint:fix` | Run oxlint with fixes |
+| `npm run format` | Format the repo with oxfmt |
+| `npm run format:check` | Check formatting with oxfmt |
+| `npm run typecheck` | Run tsgo type checking |
+| `npm run check` | Alias for `npm run typecheck` |
 
-## Development Guidelines
+## Development Notes
 
-### Code Style
+- Use the `@/` alias for imports from `client/src`
+- Add Convex functions inside `convex/`
+- Use `useQuery` and `useMutation` from `convex/react` in the UI
+- Add routes in `client/src/ConvexApp.tsx`
 
-- Use TypeScript strict mode
-- Follow the existing code patterns
-- Use shadcn/ui components when available
-- Keep components small and focused
-- Use the `@/` path alias for imports
+## Production Deployment On Replit
 
-### Responsive Design
+Development and production use different Convex deployments:
 
-The template uses a mobile-first approach:
+- **Development** is created automatically during first-run setup
+- **Production** is selected by `CONVEX_DEPLOY_KEY` during deploy
 
-- Base styles target mobile devices
-- Use Tailwind's responsive prefixes (`sm:`, `md:`, `lg:`, `xl:`) for larger screens
-- Test on various device sizes
+Before deploying, add the required production values in Replit:
 
-### Adding New Routes
+- `CONVEX_DEPLOY_KEY`
+- `VITE_CONVEX_URL`
 
-Routes use wouter. Add new routes in `client/src/App.tsx`:
-
-```tsx
-import { Switch, Route } from 'wouter';
-import { NewPage } from '@/pages/new-page';
-
-function Router() {
-  return (
-    <Switch>
-      <Route path="/" component={HomePage} />
-      <Route path="/new" component={NewPage} />
-      <Route component={NotFound} />
-    </Switch>
-  );
-}
-```
-
-### Adding Convex Functions
-
-1. Define your schema in `convex/schema.ts`
-2. Create query/mutation functions in `convex/` directory
-3. Import and use with `useQuery`/`useMutation` from `convex/react`
-
-Example query:
-
-```tsx
-import { useQuery } from 'convex/react';
-import { api } from '../convex/_generated/api';
-
-function MyComponent() {
-  const data = useQuery(api.myModule.myQuery, { arg: 'value' });
-  return <div>{data}</div>;
-}
-```
-
-## Authentication
-
-The template uses Convex Auth for authentication:
-
-```tsx
-import { Authenticated, Unauthenticated } from 'convex/react';
-import { useAuthActions } from '@convex-dev/auth/react';
-
-function App() {
-  return (
-    <>
-      <Authenticated>{/* Show when logged in */}</Authenticated>
-      <Unauthenticated>{/* Show when logged out */}</Unauthenticated>
-    </>
-  );
-}
-
-function SignOutButton() {
-  const { signOut } = useAuthActions();
-  return <button onClick={() => signOut()}>Sign Out</button>;
-}
-```
-
-## Deployment
-
-### Convex
-
-Deploy your Convex backend:
-
-```bash
-npx convex deploy
-```
-
-### Frontend + Express
-
-The app can be deployed to any Node.js hosting platform:
-
-- Replit (recommended)
-- Railway
-- Render
-- Fly.io
-
-Build and run:
-
-```bash
-npm run build
-npm run start
-```
-
-## Linting & Formatting
-
-### oxlint
-
-Ultra-fast linting with oxlint:
-
-```bash
-# Check for issues
-npx oxlint client convex
-
-# Fix issues automatically
-npx oxlint client convex --fix
-```
-
-### oxfmt
-
-Format code:
-
-```bash
-# Format all files
-npx oxfmt -c .oxfmtrc.json --write .
-
-# Check formatting
-npx oxfmt -c .oxfmtrc.json --check .
-```
-
-### tsgo
-
-Run native TypeScript checks:
-
-```bash
-npx tsgo -p tsconfig.json --noEmit
-```
-
-### Pre-commit Hooks
-
-The template includes Husky and lint-staged for automatic linting on commit:
-
-- Runs oxlint with auto-fix on staged `.ts/.tsx` files
-- Runs oxfmt on staged source and JSON files
+If you enable Google OAuth, also configure the production callback values in Convex and in Google Cloud.
 
 ## License
 
