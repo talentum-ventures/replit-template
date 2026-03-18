@@ -3,6 +3,13 @@ import react from '@vitejs/plugin-react';
 import path from 'node:path';
 import runtimeErrorOverlay from '@replit/vite-plugin-runtime-error-modal';
 
+const replitDevDomain = process.env.REPLIT_DEV_DOMAIN?.trim();
+const isReplit = process.env.REPL_ID !== undefined || Boolean(replitDevDomain);
+
+const allowedHosts = [replitDevDomain, '.replit.dev'].filter((value): value is string =>
+  Boolean(value)
+);
+
 export default defineConfig({
   plugins: [
     react(),
@@ -27,6 +34,10 @@ export default defineConfig({
     emptyOutDir: true,
   },
   server: {
+    host: isReplit ? '0.0.0.0' : undefined,
+    port: 5000,
+    strictPort: true,
+    allowedHosts: isReplit ? allowedHosts : undefined,
     fs: {
       strict: true,
       deny: ['**/.*'],

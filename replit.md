@@ -21,7 +21,7 @@ What it does:
 4. Sets `SITE_URL` in Convex when `REPLIT_DEV_DOMAIN` is available
 5. Writes `.setup-done` so the setup only runs once per remix
 
-The script also uses a lock directory so `onBoot` and workflow runs do not try to configure Convex at the same time.
+The script also uses a lock directory so concurrent setup attempts do not try to configure Convex at the same time.
 
 ## AI Setup Instructions
 
@@ -84,10 +84,11 @@ There is no Express server in the current template. Production hosting is a stat
 
 ### Workspace startup
 
-- `onBoot = "bash script/setup.sh"` triggers the one-time setup automatically
-- The `Project` workflow starts:
+- The `Project` workflow runs `Setup` first, then starts:
   - `Start Convex Backend`
   - `Start Frontend`
+- `Start Convex Backend` only runs `convex dev`
+- `Start Frontend` owns the single Vite dev server on port `5000`
 - The `Setup` workflow lets a user rerun setup manually
 
 ### Dev and prod separation

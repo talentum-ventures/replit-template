@@ -17,7 +17,7 @@ A Replit-first starter for building a React app with Convex, authentication, and
 1. Remix or fork the template.
 2. Click `Run`.
 3. Follow the Convex prompts the first time setup runs.
-4. Wait for setup to finish, then reload or run the project again if the app is still showing demo mode.
+4. Wait for setup to finish. Replit will then start the backend and frontend automatically.
 
 The first run creates a **development** Convex deployment just for that remix and saves the generated values in `.env.local`.
 
@@ -46,7 +46,7 @@ npm run dev
 - `client/src/main.tsx` loads `ConvexApp` when `VITE_CONVEX_URL` exists.
 - If that variable is missing, it loads `DemoApp` so the project still opens cleanly before setup is complete.
 - `script/setup.sh` handles first-run setup on Replit and writes `.setup-done` so it only runs once per remix.
-- `.replit` starts the frontend and Convex backend in parallel.
+- `.replit` runs `Setup` first, then starts the frontend and Convex backend in parallel.
 
 ## Project Structure
 

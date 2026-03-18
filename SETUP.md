@@ -8,7 +8,7 @@ This template is designed to be easy to start on Replit, even if you have never 
 2. Click `Run`.
 3. Follow the prompts from Convex the first time you are asked.
 4. Wait for setup to finish.
-5. If the app still shows demo mode, click `Run` again or refresh the preview.
+5. Replit will start the full app automatically when setup completes.
 
 That is the main setup. You do not need to manually create `.env.local`.
 
@@ -26,6 +26,7 @@ After that, the project starts normally with:
 
 - the frontend on Vite
 - the backend on Convex
+- one Vite process bound to port `5000`
 
 ## AI Handoff For New Projects
 
@@ -131,8 +132,8 @@ You may also want to remove or regenerate `.env.local` if you are intentionally 
 ### The app still shows demo mode
 
 - wait for the first-time Convex setup to finish
-- run the project again
 - check that `.env.local` contains `VITE_CONVEX_URL`
+- confirm the `Project` workflow completed `Setup` before starting the runtime workflows
 
 ### I want a fresh development Convex instance
 

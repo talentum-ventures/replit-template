@@ -5,6 +5,7 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SENTINEL_FILE="$ROOT_DIR/.setup-done"
 LOCK_DIR="$ROOT_DIR/.setup-lock"
+DEFAULT_WEB_SERVER_URL="http://localhost:5000"
 
 log() {
   printf '[setup] %s\n' "$1"
@@ -12,6 +13,14 @@ log() {
 
 finish() {
   rmdir "$LOCK_DIR" 2>/dev/null || true
+}
+
+get_web_server_url() {
+  if [[ -n "${REPLIT_DEV_DOMAIN:-}" ]]; then
+    printf 'https://%s\n' "$REPLIT_DEV_DOMAIN"
+  else
+    printf '%s\n' "$DEFAULT_WEB_SERVER_URL"
+  fi
 }
 
 cd "$ROOT_DIR"
@@ -52,8 +61,10 @@ else
   npx convex dev --once --tail-logs=disable
 fi
 
+WEB_SERVER_URL="$(get_web_server_url)"
+
 log "Configuring Convex Auth keys..."
-npx @convex-dev/auth --skip-git-check --allow-dirty-git-state
+npx @convex-dev/auth --skip-git-check --allow-dirty-git-state --web-server-url "$WEB_SERVER_URL"
 
 if [[ -n "${REPLIT_DEV_DOMAIN:-}" ]]; then
   log "Setting SITE_URL for this Replit workspace..."
