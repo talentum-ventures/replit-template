@@ -6,9 +6,9 @@ This template is designed to be easy to start on Replit, even if you have never 
 
 1. Remix or fork the template.
 2. Click `Run`.
-3. Follow the prompts from Convex the first time you are asked.
-4. Wait for setup to finish.
-5. Replit will start the full app automatically when setup completes.
+3. If this is the first run, complete the one-time Convex prompts when they appear.
+4. Wait for the automatic setup to finish.
+5. Replit will continue into the full app automatically.
 6. The app opens directly into the sign-in screen.
 7. Sign in with the seeded emulator user `dev@example.com`.
 
@@ -157,6 +157,7 @@ The first-run script automatically sets `SITE_URL` for the workspace when `REPLI
 If you want to run setup again:
 
 1. Run `npm run setup` locally, or run the `Setup` workflow in Replit
+2. You can also click `Run` again. `npm run dev:all` will rerun setup automatically whenever `.env.local` is missing `VITE_CONVEX_URL`
 
 Delete `.env.local` only if you intentionally want a fresh development deployment.
 
@@ -166,7 +167,7 @@ Delete `.env.local` only if you intentionally want a fresh development deploymen
 
 - wait for the first-time Convex setup to finish
 - check that `.env.local` contains `VITE_CONVEX_URL`
-- confirm the `Project` workflow completed `Setup` before starting the runtime workflows
+- rerun `npm run setup` locally or the `Setup` workflow in Replit if setup was interrupted
 
 ### I want a fresh development Convex instance
 

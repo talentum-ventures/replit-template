@@ -2,7 +2,7 @@
 
 ## Overview
 
-This repository is a Replit-ready template for a Vite + React + Convex app. It is designed so a non-technical user can remix the project, click `Run`, follow the Convex login prompts once, and then keep using the project without repeating setup.
+This repository is a Replit-ready template for a Vite + React + Convex app. It is designed so a non-technical user can remix the project, click `Run`, complete the one-time Convex prompts if needed, and then keep using the project without repeating setup.
 
 This template is intentionally app-first. It does not use a public landing or marketing homepage; signed-out users are taken straight to the auth screen so the startup path stays focused on using the web app.
 
@@ -15,7 +15,7 @@ Development auth now defaults to an emulated Google OAuth flow. In dev, the app 
 
 ## Replit Setup Flow
 
-On Replit, setup is handled by `npm run setup`, which calls `script/setup.sh`.
+On Replit, `npm run dev:all` is the main entrypoint. It checks whether `.env.local` already contains `VITE_CONVEX_URL`. If not, it automatically runs `npm run setup`, which calls `script/setup.sh`, before starting the rest of the dev stack.
 
 What it does:
 
@@ -33,32 +33,32 @@ The script also uses a lock directory so concurrent setup attempts do not try to
 
 ## Startup Sequence
 
-The Replit `Project` workflow runs in two phases:
+The Replit `Project` workflow runs `Start application`, which executes `npm run dev:all`.
 
-1. `Setup`
-2. `Runtime`
+`dev:all` does this:
 
-`Runtime` then starts these workflows in parallel:
-
-- `Start Convex Backend` -> `npm run dev:backend`
-- `Start Frontend` -> `npm run dev`
-- `Start Emulate` -> `npm run dev:emulate`
+1. checks whether first-time setup is needed
+2. runs `npm run setup` automatically when `VITE_CONVEX_URL` is missing
+3. starts the Convex backend with `npm run dev:backend`
+4. starts the Vite frontend with `npm run dev`
+5. starts the Google emulator with `npm run dev:emulate`
 
 Important runtime behavior:
 
 - Vite owns port `5000`
 - the Google emulator listens on port `4002`
-- Vite proxies `/google-emulate/*` to `http://localhost:4002`
+- Vite proxies `/google-emulate/*` and `/o/oauth2/*` to `http://localhost:4002`
 - Convex cloud dev can reach emulate through the public Replit URL because the backend uses `AUTH_GOOGLE_EMULATE_URL=https://<replit-domain>/google-emulate`
 
 This means the expected Replit boot path is:
 
-1. setup finishes
-2. Convex backend starts
-3. Vite starts on port `5000`
-4. emulate starts on port `4002`
-5. browser sign-in goes through the Vite proxy, not directly to localhost
-6. the root route shows the auth screen rather than a landing page
+1. `Start application` runs `npm run dev:all`
+2. setup runs automatically if the fork has not been initialized yet
+3. Convex backend starts
+4. Vite starts on port `5000`
+5. emulate starts on port `4002`
+6. browser sign-in goes through the Vite proxy, not directly to localhost
+7. the root route shows the auth screen rather than a landing page
 
 ## Auth Flow Notes
 
@@ -82,7 +82,7 @@ These are important context points if auth is touched later. They are not accide
 If you are an AI agent working in a remix of this template, do this before making product-specific changes:
 
 1. Check whether `.setup-done` exists.
-2. If it does not exist, ask the user to click `Run` or run the `Setup` workflow and complete the Convex prompts.
+2. If it does not exist, ask the user to click `Run` so the automatic setup flow can complete the Convex prompts, or run the `Setup` workflow manually.
 3. Confirm `.env.local` now contains `CONVEX_DEPLOYMENT` and `VITE_CONVEX_URL`.
 4. Confirm Convex env includes `SITE_URL`, `AUTH_GOOGLE_EMULATE_URL`, `JWT_PRIVATE_KEY`, and `JWKS`.
 5. Confirm the app is no longer using demo mode.
@@ -127,7 +127,7 @@ After collecting that context, the AI should summarize it in plain language and 
 - **Queries and mutations**: `convex/todos.ts`, `convex/users.ts`, `convex/presence.ts`
 - **HTTP auth routes**: `convex/http.ts`
 
-There is no Express server in the current template. Production hosting is a static frontend bundle that talks directly to Convex.
+There is no application server in the current template. Replit deployment publishes the static frontend bundle from `dist/public`, and the app talks directly to Convex.
 
 ### Authentication
 
@@ -141,14 +141,12 @@ There is no Express server in the current template. Production hosting is a stat
 
 ### Workspace startup
 
-- The `Project` workflow runs `Setup` first, then starts:
-  - `Start Convex Backend`
-  - `Start Frontend`
-  - `Start Emulate`
-- `Start Convex Backend` runs `npm run dev:backend`
-- `Start Frontend` owns the single Vite dev server on port `5000`
-- `Start Emulate` runs `npm run dev:emulate`
-- The `Setup` workflow runs `npm run setup`, and a user can rerun it manually to repair dev auth configuration
+- The default `run` command is `npm run dev:all`
+- The `Project` workflow runs `Start application`
+- `Start application` runs `npm run dev:all` and waits for port `5000`
+- `dev:all` auto-runs setup when `.env.local` is not configured yet
+- `dev:all` then starts Convex, Vite, and emulate together
+- The `Setup` workflow still runs `npm run setup` so a user can manually repair dev auth configuration
 
 ### Dev and prod separation
 

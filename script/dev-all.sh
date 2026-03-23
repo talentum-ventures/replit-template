@@ -29,6 +29,11 @@ trap cleanup EXIT INT TERM
 
 cd "$ROOT_DIR"
 
+if ! grep -q '^VITE_CONVEX_URL=' "$ROOT_DIR/.env.local" 2>/dev/null; then
+  echo "[dev-all] First-time setup detected. Running setup..."
+  bash "$ROOT_DIR/script/setup.sh"
+fi
+
 echo "[dev-all] Starting Google emulate, Convex, and Vite..."
 
 npm run dev:emulate &
