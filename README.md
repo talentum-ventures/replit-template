@@ -17,7 +17,9 @@ A Replit-first starter for building a React app with Convex, authentication, and
 1. Remix or fork the template.
 2. Click `Run`.
 3. Follow the Convex prompts the first time setup runs.
-4. Wait for setup to finish. Replit will then start the backend and frontend automatically.
+4. Wait for setup to finish. Replit will then start the backend, frontend, and Google emulator automatically.
+5. The app opens directly into the sign-in screen.
+6. Sign in with the seeded emulator user `dev@example.com`.
 
 The first run creates a **development** Convex deployment just for that remix and saves the generated values in `.env.local`.
 
@@ -29,15 +31,19 @@ If you are running the project outside Replit:
 
 ```bash
 npm install
-npx convex dev --once
-npx @convex-dev/auth --skip-git-check --allow-dirty-git-state
-npm run dev
+npm run setup
+npm run dev:all
 ```
 
-After the one-time setup, keep Convex and Vite running during development:
+The setup command provisions a dev Convex deployment if needed, configures Convex Auth keys, and sets the dev Google emulator URL automatically.
+
+This template is app-first, not marketing-first. When unauthenticated, `/` renders the sign-in screen instead of a landing page.
+
+If you prefer to run services separately for debugging:
 
 ```bash
-npx convex dev
+npm run dev:emulate
+npm run dev:backend
 npm run dev
 ```
 
@@ -45,8 +51,10 @@ npm run dev
 
 - `client/src/main.tsx` loads `ConvexApp` when `VITE_CONVEX_URL` exists.
 - If that variable is missing, it loads `DemoApp` so the project still opens cleanly before setup is complete.
-- `script/setup.sh` handles first-run setup on Replit and writes `.setup-done` so it only runs once per remix.
-- `.replit` runs `Setup` first, then starts the frontend and Convex backend in parallel.
+- `client/src/ConvexApp.tsx` renders the dashboard for authenticated users and the auth screen for signed-out users at `/`.
+- `script/setup.sh` handles first-run setup on Replit and can be rerun locally or on Replit to repair auth-related env.
+- `script/dev-emulate.mjs` starts the Google emulator with the exact callback URLs needed by local Convex and Replit dev.
+- `.replit` runs `Setup` first, then starts the emulator, frontend, and Convex backend in parallel.
 
 ## Project Structure
 
@@ -70,6 +78,8 @@ npm run dev
 │   ├── todos.ts
 │   └── users.ts
 ├── script/
+│   ├── dev-all.sh
+│   ├── dev-emulate.mjs
 │   └── setup.sh
 ├── .replit
 ├── SETUP.md
@@ -81,8 +91,11 @@ npm run dev
 
 | Command | Description |
 | --- | --- |
+| `npm run setup` | Provision or repair local/Replit dev setup, including Convex Auth keys and emulate env |
 | `npm run dev` | Start the Vite dev server |
+| `npm run dev:all` | Start the Google emulator, Convex dev, and Vite together |
 | `npm run dev:backend` | Start `convex dev` |
+| `npm run dev:emulate` | Start the local Google emulator with generated callback URLs |
 | `npm run build` | Build the frontend for production |
 | `npm run preview` | Preview the production build locally |
 | `npm run lint` | Run oxlint |
@@ -104,6 +117,7 @@ npm run dev
 Development and production use different Convex deployments:
 
 - **Development** is created automatically during first-run setup
+- **Development auth** uses emulated Google OAuth through `AUTH_GOOGLE_EMULATE_URL`
 - **Production** is selected by `CONVEX_DEPLOY_KEY` during deploy
 
 Before deploying, add the required production values in Replit:
@@ -112,6 +126,8 @@ Before deploying, add the required production values in Replit:
 - `VITE_CONVEX_URL`
 
 If you enable Google OAuth, also configure the production callback values in Convex and in Google Cloud.
+
+Do not set `AUTH_GOOGLE_EMULATE_URL` in production. When that variable is unset, the app uses the real Google provider with `AUTH_GOOGLE_ID` and `AUTH_GOOGLE_SECRET`.
 
 ## License
 

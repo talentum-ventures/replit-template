@@ -1,0 +1,9 @@
+google:
+  users:
+    - email: dev@example.com
+      name: Dev User
+  oauth_clients:
+    - client_id: emulate-google-client-id
+      client_secret: emulate-google-client-secret
+      # Exact redirect URIs are injected by `npm run dev:emulate` based on
+      # local env so this config can work for local Convex and Replit dev.

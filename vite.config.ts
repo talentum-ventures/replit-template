@@ -38,6 +38,13 @@ export default defineConfig({
     port: 5000,
     strictPort: true,
     allowedHosts: isReplit ? allowedHosts : undefined,
+    proxy: {
+      '/google-emulate': {
+        target: 'http://localhost:4002',
+        rewrite: (path) => path.replace(/^\/google-emulate/, ''),
+        changeOrigin: true,
+      },
+    },
     fs: {
       strict: true,
       deny: ['**/.*'],

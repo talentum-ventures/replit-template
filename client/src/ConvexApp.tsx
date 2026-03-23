@@ -3,10 +3,17 @@ import { Authenticated, Unauthenticated } from 'convex/react';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { ThemeProvider } from '@/components/theme-provider';
-import { LandingPage } from '@/components/landing-page';
 import { Dashboard } from '@/components/dashboard';
 import { AuthForm } from '@/components/auth-form';
 import NotFound from '@/pages/not-found';
+
+function AuthScreen() {
+  return (
+    <div className="min-h-screen flex items-center justify-center p-4 bg-background">
+      <AuthForm />
+    </div>
+  );
+}
 
 export function ConvexApp() {
   return (
@@ -21,7 +28,7 @@ export function ConvexApp() {
                   <Dashboard />
                 </Authenticated>
                 <Unauthenticated>
-                  <LandingPage />
+                  <AuthScreen />
                 </Unauthenticated>
               </>
             )}
@@ -30,9 +37,7 @@ export function ConvexApp() {
             {() => (
               <>
                 <Unauthenticated>
-                  <div className="min-h-screen flex items-center justify-center p-4 bg-background">
-                    <AuthForm />
-                  </div>
+                  <AuthScreen />
                 </Unauthenticated>
                 <Authenticated>
                   <Dashboard />

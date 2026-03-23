@@ -9,6 +9,8 @@ This template is designed to be easy to start on Replit, even if you have never 
 3. Follow the prompts from Convex the first time you are asked.
 4. Wait for setup to finish.
 5. Replit will start the full app automatically when setup completes.
+6. The app opens directly into the sign-in screen.
+7. Sign in with the seeded emulator user `dev@example.com`.
 
 That is the main setup. You do not need to manually create `.env.local`.
 
@@ -19,14 +21,37 @@ The first-run setup script does this for you:
 - installs dependencies if needed
 - creates or connects a **development** Convex deployment
 - generates Convex Auth keys
-- sets `SITE_URL` for the Replit workspace
-- saves a `.setup-done` file so setup does not repeat every time
+- sets `SITE_URL`
+- sets `AUTH_GOOGLE_EMULATE_URL` for development
+- saves a `.setup-done` file after a successful run
 
 After that, the project starts normally with:
 
 - the frontend on Vite
 - the backend on Convex
+- the Google emulator on port `4002`
 - one Vite process bound to port `5000`
+- the root route showing the app sign-in screen instead of a marketing landing page
+
+## Local Development
+
+Recommended local setup:
+
+```bash
+npm install
+npm run setup
+npm run dev:all
+```
+
+`npm run setup` provisions or repairs local development auth automatically. It creates a dev Convex deployment if needed, generates Convex Auth keys, sets `SITE_URL=http://localhost:5000`, and sets `AUTH_GOOGLE_EMULATE_URL=http://localhost:4002`.
+
+If you want to run each service separately:
+
+```bash
+npm run dev:emulate
+npm run dev:backend
+npm run dev
+```
 
 ## AI Handoff For New Projects
 
@@ -60,12 +85,20 @@ This template uses **different Convex deployments for development and production
 ### Development
 
 Development is created automatically during the first Replit setup.
+Development auth uses the emulated Google provider by default.
 
 The generated values go into `.env.local`, usually including:
 
 - `CONVEX_DEPLOYMENT`
 - `VITE_CONVEX_URL`
 - `VITE_CONVEX_SITE_URL`
+
+Convex environment variables also include:
+
+- `SITE_URL`
+- `AUTH_GOOGLE_EMULATE_URL`
+- `JWT_PRIVATE_KEY`
+- `JWKS`
 
 ### Production
 
@@ -92,9 +125,9 @@ If you use Google OAuth, also update the production callback settings before dep
 
 ## Optional Google OAuth Setup
 
-Google OAuth is optional. The template can still work in development with password auth when appropriate.
+Production uses the real Google provider when `AUTH_GOOGLE_EMULATE_URL` is unset.
 
-If you want Google sign-in:
+If you want production Google sign-in:
 
 1. Create OAuth credentials in [Google Cloud Console](https://console.cloud.google.com/).
 2. Add this redirect URI in Google:
@@ -109,6 +142,7 @@ https://YOUR_CONVEX_DEPLOYMENT.convex.site/api/auth/callback/google
 - `AUTH_GOOGLE_SECRET`
 
 4. Make sure `SITE_URL` in Convex matches your app URL.
+5. Do not set `AUTH_GOOGLE_EMULATE_URL` in production.
 
 For a Replit workspace URL, that will usually look like:
 
@@ -122,10 +156,9 @@ The first-run script automatically sets `SITE_URL` for the workspace when `REPLI
 
 If you want to run setup again:
 
-1. Delete `.setup-done`
-2. Run the `Setup` workflow in Replit
+1. Run `npm run setup` locally, or run the `Setup` workflow in Replit
 
-You may also want to remove or regenerate `.env.local` if you are intentionally switching development deployments.
+Delete `.env.local` only if you intentionally want a fresh development deployment.
 
 ## Troubleshooting
 
@@ -137,12 +170,12 @@ You may also want to remove or regenerate `.env.local` if you are intentionally 
 
 ### I want a fresh development Convex instance
 
-- delete `.setup-done`
 - delete `.env.local`
-- run the `Setup` workflow again
+- run `npm run setup` locally or the `Setup` workflow again on Replit
 
 ### Google sign-in is failing
 
-- verify the callback URL in Google Cloud exactly matches your Convex site URL
-- verify `AUTH_GOOGLE_ID` and `AUTH_GOOGLE_SECRET` are set in Convex
+- in development, verify `AUTH_GOOGLE_EMULATE_URL` is set in Convex
+- in production, verify the callback URL in Google Cloud exactly matches your Convex site URL
+- in production, verify `AUTH_GOOGLE_ID` and `AUTH_GOOGLE_SECRET` are set in Convex
 - verify `SITE_URL` matches the URL where users open your app
