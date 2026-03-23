@@ -44,6 +44,10 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/google-emulate/, ''),
         changeOrigin: true,
       },
+      '/o/oauth2': {
+        target: 'http://localhost:4002',
+        changeOrigin: true,
+      },
     },
     fs: {
       strict: true,
