@@ -20,7 +20,7 @@ On Replit, `npm run dev:all` is the main entrypoint. It checks whether `.env.loc
 What it does:
 
 1. Installs dependencies if needed
-2. Runs `npx convex dev --once` to create or connect a dev Convex deployment
+2. Runs `npx convex dev --once --local` to create or reconnect the local Convex backend for this project
 3. Checks whether Convex Auth keys already exist
 4. Runs `npx @convex-dev/auth` only when `JWT_PRIVATE_KEY` or `JWKS` are missing
 5. Sets `SITE_URL` in Convex to `https://${REPLIT_DEV_DOMAIN}` on Replit
@@ -48,7 +48,7 @@ Important runtime behavior:
 - Vite owns port `5000`
 - the Google emulator listens on port `4002`
 - Vite proxies `/google-emulate/*` and `/o/oauth2/*` to `http://localhost:4002`
-- Convex cloud dev can reach emulate through the public Replit URL because the backend uses `AUTH_GOOGLE_EMULATE_URL=https://<replit-domain>/google-emulate`
+- even when Convex is local on Replit, the browser cannot follow OAuth redirects to the container's `localhost`, so the public Replit URL proxy is still required there
 
 This means the expected Replit boot path is:
 
@@ -150,7 +150,7 @@ There is no application server in the current template. Replit deployment publis
 
 ### Dev and prod separation
 
-- **Development** uses the deployment created by `npx convex dev --once`
+- **Development** uses the local backend created by `npx convex dev --once --local`
 - **Development auth** uses emulate through `AUTH_GOOGLE_EMULATE_URL`
 - **Production** uses a separate Convex deployment selected through `CONVEX_DEPLOY_KEY` during Replit deploys
 - The built frontend should point at production via `VITE_CONVEX_URL`
@@ -166,11 +166,11 @@ Replit deployment is configured as a static site:
 
 ### Local workspace values
 
-`npx convex dev --once` creates `.env.local` with values like:
+`npx convex dev --once --local` creates `.env.local` with values like:
 
-- `CONVEX_DEPLOYMENT`
-- `VITE_CONVEX_URL`
-- `VITE_CONVEX_SITE_URL`
+- `CONVEX_DEPLOYMENT=local:...`
+- `VITE_CONVEX_URL=http://127.0.0.1:3210`
+- `VITE_CONVEX_SITE_URL=http://127.0.0.1:3211`
 
 ### Convex environment values
 

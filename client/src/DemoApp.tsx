@@ -13,7 +13,8 @@ export function DemoApp() {
             Convex is not configured
           </h1>
           <p className="max-w-2xl text-base text-muted-foreground sm:text-lg">
-            Run <code className="rounded bg-muted px-1.5 py-0.5">npx convex dev</code> to generate
+            Run <code className="rounded bg-muted px-1.5 py-0.5">npm run setup</code> or{' '}
+            <code className="rounded bg-muted px-1.5 py-0.5">npm run dev:backend</code> to generate
             local settings, or set{' '}
             <code className="rounded bg-muted px-1.5 py-0.5">VITE_CONVEX_URL</code> for production
             hosting.
@@ -23,7 +24,7 @@ export function DemoApp() {
         <section className="rounded-2xl border bg-card p-6 shadow-sm">
           <h2 className="text-lg font-medium">Next steps</h2>
           <ol className="mt-4 space-y-3 text-sm text-muted-foreground">
-            <li>1. Start Convex with `npx convex dev` in the project root.</li>
+            <li>1. Start Convex with `npm run dev:backend` in the project root.</li>
             <li>2. Confirm `.env.local` contains `CONVEX_DEPLOYMENT` and `VITE_CONVEX_URL`.</li>
             <li>3. Restart Vite after updating environment variables.</li>
           </ol>

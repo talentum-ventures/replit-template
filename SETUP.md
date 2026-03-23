@@ -19,7 +19,7 @@ That is the main setup. You do not need to manually create `.env.local`.
 The first-run setup script does this for you:
 
 - installs dependencies if needed
-- creates or connects a **development** Convex deployment
+- creates or reconnects a **local Convex development backend**
 - generates Convex Auth keys
 - sets `SITE_URL`
 - sets `AUTH_GOOGLE_EMULATE_URL` for development
@@ -43,7 +43,15 @@ npm run setup
 npm run dev:all
 ```
 
-`npm run setup` provisions or repairs local development auth automatically. It creates a dev Convex deployment if needed, generates Convex Auth keys, sets `SITE_URL=http://localhost:5000`, and sets `AUTH_GOOGLE_EMULATE_URL=http://localhost:4002`.
+`npm run setup` provisions or repairs local development auth automatically. It starts or reconnects a local Convex backend if needed, generates Convex Auth keys, sets `SITE_URL`, and sets `AUTH_GOOGLE_EMULATE_URL` for the current environment.
+
+On your own machine, `AUTH_GOOGLE_EMULATE_URL` is `http://localhost:4002`.
+
+On Replit, the backend still runs locally, but browser OAuth redirects must go through the public workspace URL, so setup uses:
+
+```text
+https://YOUR-APP-NAME.YOUR-USER.replit.dev/google-emulate
+```
 
 If you want to run each service separately:
 
@@ -87,11 +95,11 @@ This template uses **different Convex deployments for development and production
 Development is created automatically during the first Replit setup.
 Development auth uses the emulated Google provider by default.
 
-The generated values go into `.env.local`, usually including:
+The generated values go into `.env.local`, usually including local-backend values such as:
 
-- `CONVEX_DEPLOYMENT`
-- `VITE_CONVEX_URL`
-- `VITE_CONVEX_SITE_URL`
+- `CONVEX_DEPLOYMENT=local:...`
+- `VITE_CONVEX_URL=http://127.0.0.1:3210`
+- `VITE_CONVEX_SITE_URL=http://127.0.0.1:3211`
 
 Convex environment variables also include:
 
@@ -159,7 +167,7 @@ If you want to run setup again:
 1. Run `npm run setup` locally, or run the `Setup` workflow in Replit
 2. You can also click `Run` again. `npm run dev:all` will rerun setup automatically whenever `.env.local` is missing `VITE_CONVEX_URL`
 
-Delete `.env.local` only if you intentionally want a fresh development deployment.
+Delete `.env.local` only if you intentionally want a fresh local development backend.
 
 ## Troubleshooting
 
@@ -169,7 +177,7 @@ Delete `.env.local` only if you intentionally want a fresh development deploymen
 - check that `.env.local` contains `VITE_CONVEX_URL`
 - rerun `npm run setup` locally or the `Setup` workflow in Replit if setup was interrupted
 
-### I want a fresh development Convex instance
+### I want a fresh local Convex instance
 
 - delete `.env.local`
 - run `npm run setup` locally or the `Setup` workflow again on Replit
