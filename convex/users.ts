@@ -1,6 +1,6 @@
 import { getAuthUserId } from '@convex-dev/auth/server';
 import { v } from 'convex/values';
-import { mutation, query } from './_generated/server';
+import { internalQuery, mutation, query } from './_generated/server';
 
 export const current = query({
   args: {},
@@ -10,6 +10,16 @@ export const current = query({
       return null;
     }
     return await ctx.db.get(userId);
+  },
+});
+
+export const listAll = internalQuery({
+  args: {},
+  handler: async (ctx) => {
+    const users = await ctx.db.query('users').collect();
+    return users
+      .filter((u) => u.email)
+      .map((u) => ({ email: u.email as string, name: u.name ?? u.email as string }));
   },
 });
 

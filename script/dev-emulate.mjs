@@ -1,4 +1,4 @@
-import { spawn } from 'node:child_process';
+import { spawn, spawnSync } from 'node:child_process';
 import { existsSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -78,6 +78,50 @@ const baseConfig = existsSync(baseConfigPath)
   ? (YAML.parse(readFileSync(baseConfigPath, 'utf8')) ?? {})
   : {};
 
+function fetchConvexUsers() {
+  try {
+    const result = spawnSync(
+      'npx',
+      ['convex', 'run', 'users:listAll', '--no-push'],
+      { cwd: rootDir, encoding: 'utf8', timeout: 15000, shell: process.platform === 'win32' }
+    );
+    if (result.status !== 0 || !result.stdout) {
+      return [];
+    }
+    const parsed = JSON.parse(result.stdout.trim());
+    if (Array.isArray(parsed)) {
+      return parsed.filter((u) => u && typeof u.email === 'string');
+    }
+    return [];
+  } catch {
+    return [];
+  }
+}
+
+function mergeUsers(configUsers, dbUsers) {
+  const merged = new Map();
+  for (const u of configUsers) {
+    merged.set(u.email, u);
+  }
+  for (const u of dbUsers) {
+    merged.set(u.email, { ...merged.get(u.email), ...u });
+  }
+  return Array.from(merged.values());
+}
+
+const configUsers = baseConfig.google?.users?.length
+  ? baseConfig.google.users
+  : [{ email: 'dev@example.com', name: 'Dev User' }];
+
+console.log('Fetching users from Convex DB...');
+const dbUsers = fetchConvexUsers();
+if (dbUsers.length > 0) {
+  console.log(`Found ${dbUsers.length} user(s) in Convex DB, merging with config users.`);
+} else {
+  console.log('No Convex DB users found (or Convex not reachable), using config users only.');
+}
+const mergedUsers = mergeUsers(configUsers, dbUsers);
+
 const baseUrls = [
   process.env.CUSTOM_AUTH_SITE_URL,
   process.env.CONVEX_SITE_URL,
@@ -99,9 +143,7 @@ const runtimeConfig = {
   ...baseConfig,
   google: {
     ...baseConfig.google,
-    users: baseConfig.google?.users?.length
-      ? baseConfig.google.users
-      : [{ email: 'dev@example.com', name: 'Dev User' }],
+    users: mergedUsers,
     oauth_clients: (baseConfig.google?.oauth_clients?.length
       ? baseConfig.google.oauth_clients
       : [
