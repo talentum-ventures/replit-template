@@ -1,5 +1,5 @@
 modules = ["nodejs-20", "web"]
-run = "npm run dev"
+run = "npm run dev:all"
 hidden = [".config", ".git", "generated-icon.png", "node_modules", "dist"]
 
 [nix]
@@ -17,10 +17,9 @@ externalPort = 80
 PORT = "5000"
 
 [deployment]
-deploymentTarget = "autoscale"
+deploymentTarget = "static"
 publicDir = "dist/public"
-build = ["npm", "run", "build"]
-run = ["node", "./dist/index.cjs"]
+build = ["bash", "-lc", "npx convex deploy && npm run build"]
 
 [workflows]
 runButton = "Project"
@@ -28,32 +27,10 @@ runButton = "Project"
 [[workflows.workflow]]
 name = "Project"
 author = "agent"
-mode = "parallel"
-
-[[workflows.workflow.tasks]]
-task = "workflow.run"
-args = "Runtime"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
 args = "Start application"
-
-[[workflows.workflow]]
-name = "Runtime"
-mode = "parallel"
-author = "agent"
-
-[[workflows.workflow.tasks]]
-task = "workflow.run"
-args = "Start Convex Backend"
-
-[[workflows.workflow.tasks]]
-task = "workflow.run"
-args = "Start Frontend"
-
-[[workflows.workflow.tasks]]
-task = "workflow.run"
-args = "Start Emulate"
 
 [[workflows.workflow]]
 name = "Start application"
@@ -67,5 +44,10 @@ task = "shell.exec"
 args = "npm run dev:all"
 waitForPort = 5000
 
-[agent]
-expertMode = true
+[[workflows.workflow]]
+name = "Setup"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run setup"

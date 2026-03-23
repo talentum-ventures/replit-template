@@ -21,7 +21,7 @@ A Replit-first starter for building a React app with Convex, authentication, and
 5. The app opens directly into the sign-in screen.
 6. Sign in with the seeded emulator user `dev@example.com`.
 
-The first run creates a **development** Convex deployment just for that remix and saves the generated values in `.env.local`.
+The first run creates or reconnects a **local Convex development backend** for that remix and saves the generated values in `.env.local`.
 
 For a more detailed walkthrough, see [SETUP.md](./SETUP.md).
 
@@ -35,7 +35,7 @@ npm run setup
 npm run dev:all
 ```
 
-The setup command provisions a dev Convex deployment if needed, configures Convex Auth keys, and sets the dev Google emulator URL automatically.
+The setup command provisions or reconnects the local Convex backend if needed, configures Convex Auth keys, and sets the dev Google emulator URL automatically.
 
 This template is app-first, not marketing-first. When unauthenticated, `/` renders the sign-in screen instead of a landing page.
 
@@ -94,7 +94,7 @@ npm run dev
 | `npm run setup` | Provision or repair local/Replit dev setup, including Convex Auth keys and emulate env |
 | `npm run dev` | Start the Vite dev server |
 | `npm run dev:all` | Start the Google emulator, Convex dev, and Vite together |
-| `npm run dev:backend` | Start `convex dev` |
+| `npm run dev:backend` | Start `convex dev --local` |
 | `npm run dev:emulate` | Start the local Google emulator with generated callback URLs |
 | `npm run build` | Build the frontend for production |
 | `npm run preview` | Preview the production build locally |
@@ -116,7 +116,7 @@ npm run dev
 
 Development and production use different Convex deployments:
 
-- **Development** is created automatically during first-run setup
+- **Development** uses the local backend created automatically during first-run setup
 - **Development auth** uses emulated Google OAuth through `AUTH_GOOGLE_EMULATE_URL`
 - **Production** is selected by `CONVEX_DEPLOY_KEY` during deploy
 

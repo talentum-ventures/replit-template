@@ -85,8 +85,8 @@ fi
 if [[ -f .env.local ]] && grep -q '^VITE_CONVEX_URL=' .env.local; then
   log "Existing Convex settings found in .env.local."
 else
-  log "Starting one-time Convex setup. Follow the prompts in this terminal."
-  npx convex dev --once --tail-logs=disable
+  log "Starting one-time Convex local setup. Follow the prompts in this terminal."
+  npx convex dev --once --local --tail-logs=disable
 fi
 
 WEB_SERVER_URL="$(get_web_server_url)"

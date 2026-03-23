@@ -7,7 +7,7 @@
     "setup": "bash script/setup.sh",
     "dev": "vite",
     "dev:all": "bash script/dev-all.sh",
-    "dev:backend": "npx convex dev",
+    "dev:backend": "npx convex dev --local",
     "dev:emulate": "node script/dev-emulate.mjs",
     "build": "vite build",
     "preview": "vite preview",
