@@ -8,7 +8,7 @@ build/
 
 # Convex generated files
 .convex/
-convex/_generated/
+# convex/_generated/ is tracked to allow the app to run before Convex is configured
 
 # TanStack Start generated files
 app/routeTree.gen.ts
